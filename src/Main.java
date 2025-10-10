@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner choice = new Scanner(System.in);
+        double balance = 0;
         boolean exit = false;
         do {
             System.out.println("Choose your action:");
@@ -17,7 +18,9 @@ public class Main {
 
             switch(choice.nextInt()) {
                 case 1:
-                    addIncome();
+                    balance += addIncome();
+                    System.out.println("Income was added!");
+                    System.out.println();
                     break;
                 case 2:
                     //TODO: addPurchases()
@@ -27,6 +30,8 @@ public class Main {
                     break;
                 case 4:
                     //TODO: balance()
+                    System.out.printf(Locale.US,"Balance: $%.2f%n", balance);
+                    System.out.println();
                     break;
                 case 0:
                     //TODO exit()
