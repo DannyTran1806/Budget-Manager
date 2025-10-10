@@ -10,6 +10,10 @@ public class Main {
         double total = 0;
         boolean exit = false;
         List<String> purchases = new ArrayList<>();
+        List<String> foodList = new ArrayList<>();
+        List<String>  clothesList= new ArrayList<>();
+        List<String>  entertainmentList= new ArrayList<>();
+        List<String>  othersList= new ArrayList<>();
         do {
             System.out.println("Choose your action:");
             System.out.println("1) Add Income");
@@ -26,8 +30,15 @@ public class Main {
                     System.out.println();
                     break;
                 case 2:
+                    List<String> currentList = new ArrayList<>();
+                    displayCategoryMenu();
+                    switch(choice.nextInt()){
+                        case 1:
+                            currentList = foodList;
+                            break;
+                    }
                     System.out.println();
-                    double itemAmount = addPurchase(purchases);
+                    double itemAmount = addPurchase(currentList);
                     total += itemAmount;
                     if (balance <= 0){
                         balance = 0;
@@ -72,6 +83,7 @@ public class Main {
     }
 
     public static double addPurchase(List<String> purchases){
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter purchase name:");
         String purchaseName = scanner.nextLine();
@@ -81,4 +93,21 @@ public class Main {
         return Double.parseDouble(price);
     }
 
+    public static  void displayCategoryMenu(){
+        System.out.println("Choose the type of purchase");
+        System.out.println("1) Food");
+        System.out.println("2) Clothes");
+        System.out.println("3) Entertainment");
+        System.out.println("4) Other");
+        System.out.println("5) Back");
+    }
+    public static void listingOptionsPurchases(){
+        System.out.println("Choose the type of purchase");
+        System.out.println("1) Food");
+        System.out.println("2) Clothes");
+        System.out.println("3) Entertainment");
+        System.out.println("4) Other");
+        System.out.println("5) All");
+        System.out.println("6) Back");
+    }
 }
