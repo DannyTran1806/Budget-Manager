@@ -27,15 +27,27 @@ public class Main {
                     break;
                 case 2:
                     System.out.println();
-                    total += addPurchase(purchases, total);
+                    double itemAmount = addPurchase(purchases);
+                    total += itemAmount;
+                    if (balance <= 0){
+                        balance = 0;
+                    }else {
+                        balance -= itemAmount;
+                    }
                     System.out.println("Purchase was added!");
+                    System.out.println();
                     break;
                 case 3:
                     System.out.println();
-                    for (String purchase : purchases) {
-                        System.out.println(purchase);
+                    if(purchases.isEmpty()){
+                        System.out.println("The purchase list is empty");
+                    }else {
+                        for (String purchase : purchases) {
+                            System.out.println(purchase);
+                        }
+                        System.out.printf(Locale.US, "Total sum: $%.2f%n", total);
                     }
-                    System.out.printf(Locale.US, "Total sum: $%.2f%n", total);
+                    System.out.println();
                     break;
                 case 4:
                     System.out.println();
@@ -43,7 +55,10 @@ public class Main {
                     System.out.println();
                     break;
                 case 0:
+                    System.out.println();
                     exit = true;
+                    System.out.println("Bye!");
+                    System.out.println();
                     break;
             }
         } while(!exit);
@@ -53,6 +68,7 @@ public class Main {
         System.out.println("Enter income:");
         Scanner scanner = new Scanner(System.in);
         return scanner.nextDouble();
+
     }
 
     public static void countPurchases(){
@@ -78,16 +94,14 @@ public class Main {
         scanner.close();
     }
 
-    public static double addPurchase(List<String> purchases, double total){
+    public static double addPurchase(List<String> purchases){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter purchase name:");
         String purchaseName = scanner.nextLine();
         System.out.println("Enter its price:");
         String price = scanner.nextLine();
         purchases.add(purchaseName + " " + "$" + price);
-        double itemAmount = Double.parseDouble(price);
-        total += itemAmount;
-        return total;
+        return Double.parseDouble(price);
     }
 
 }
