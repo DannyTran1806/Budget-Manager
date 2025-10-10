@@ -5,8 +5,35 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Choose your action:");
+        Scanner choice = new Scanner(System.in);
+        boolean exit = false;
+        do {
+            System.out.println("Choose your action:");
+            System.out.println("1) Add Income");
+            System.out.println("2) Add purchase");
+            System.out.println("3) Show list of purchases");
+            System.out.println("4) Balance");
+            System.out.println("0) Exit");
 
+            switch(choice.nextInt()) {
+                case 1:
+                    addIncome();
+                    break;
+                case 2:
+                    //TODO: addPurchases()
+                    break;
+                case 3:
+                    //TODO: showListOfPurchases()
+                    break;
+                case 4:
+                    //TODO: balance()
+                    break;
+                case 0:
+                    //TODO exit()
+                    exit = true;
+                    break;
+            }
+        } while(!exit);
     }
 
     public static double addIncome(){
