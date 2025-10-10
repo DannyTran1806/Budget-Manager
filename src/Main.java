@@ -7,7 +7,9 @@ public class Main {
     public static void main(String[] args) {
         Scanner choice = new Scanner(System.in);
         double balance = 0;
+        double total = 0;
         boolean exit = false;
+        List<String> purchases = new ArrayList<>();
         do {
             System.out.println("Choose your action:");
             System.out.println("1) Add Income");
@@ -18,23 +20,29 @@ public class Main {
 
             switch(choice.nextInt()) {
                 case 1:
+                    System.out.println();
                     balance += addIncome();
                     System.out.println("Income was added!");
                     System.out.println();
                     break;
                 case 2:
-                    //TODO: addPurchases()
+                    System.out.println();
+                    total += addPurchase(purchases, total);
+                    System.out.println("Purchase was added!");
                     break;
                 case 3:
-                    //TODO: showListOfPurchases()
+                    System.out.println();
+                    for (String purchase : purchases) {
+                        System.out.println(purchase);
+                    }
+                    System.out.printf(Locale.US, "Total sum: $%.2f%n", total);
                     break;
                 case 4:
-                    //TODO: balance()
+                    System.out.println();
                     System.out.printf(Locale.US,"Balance: $%.2f%n", balance);
                     System.out.println();
                     break;
                 case 0:
-                    //TODO exit()
                     exit = true;
                     break;
             }
@@ -69,4 +77,17 @@ public class Main {
 
         scanner.close();
     }
+
+    public static double addPurchase(List<String> purchases, double total){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter purchase name:");
+        String purchaseName = scanner.nextLine();
+        System.out.println("Enter its price:");
+        String price = scanner.nextLine();
+        purchases.add(purchaseName + " " + "$" + price);
+        double itemAmount = Double.parseDouble(price);
+        total += itemAmount;
+        return total;
+    }
+
 }
