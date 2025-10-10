@@ -71,29 +71,6 @@ public class Main {
 
     }
 
-    public static void countPurchases(){
-        Scanner scanner = new Scanner(System.in);
-        double total = 0;
-        List<String> purchases = new ArrayList<>();
-
-        while (scanner.hasNextLine()) {
-            String input = scanner.nextLine();
-            purchases.add(input);
-            String[] entries = input.split(" ");
-            String pricePart = entries[entries.length - 1];
-            double price = Double.parseDouble(pricePart.replace("$", ""));
-            total += price;
-        }
-
-        for(String purchase : purchases) {
-            System.out.println(purchase);
-        }
-        System.out.println();
-        System.out.printf(Locale.US,"Total: $%.2f%n" , total);
-
-        scanner.close();
-    }
-
     public static double addPurchase(List<String> purchases){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter purchase name:");
