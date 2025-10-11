@@ -1,10 +1,11 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner in = new Scanner(System.in);
         double balance = 0.0;
         double total = 0.0;
@@ -15,14 +16,10 @@ public class Main {
         List<String>  othersList= new ArrayList<>();
 
         boolean exit = false;
-
-        boolean back = false;
-        List<String> purchases = new ArrayList<>();
-
+        createFile("purchases.txt");
         while (!exit) {
             printMainMenu();
             int choice = readIntInRange(in);
-
             switch (choice) {
                 case 1 -> {
                     // Add Income
@@ -39,6 +36,7 @@ public class Main {
                         System.out.println();
                         break;
                     }
+                    System.out.println();
                     List<String> currentList = switch (category) {
                         case 1 -> foodList;
                         case 2 -> clothesList;
@@ -48,8 +46,6 @@ public class Main {
                     };
 
                     if (currentList == null) {
-                        System.out.println("Invalid category.");
-                        System.out.println();
                         break;
                     }
 
@@ -64,49 +60,65 @@ public class Main {
                     }
                     System.out.println("Purchase was added!");
                     System.out.println();
-
-
                 }
                 case 3 -> { // Show lists
                     System.out.println();
                     int listChoice = listingOptionsPurchases(in);
-                    switch (listChoice) {
-                        case 1 -> {
-                            System.out.println("Food:");
-                            printListWithCategoryTotal(foodList);
-                        }
-                        case 2 -> {
-                            System.out.println("Clothes:");
-                            printListWithCategoryTotal(clothesList);
-                        }
-                        case 3 -> {
-                            System.out.println("Entertainment:");
-                            printListWithCategoryTotal(entertainmentList);
-                        }
-                        case 4 -> {
-                            System.out.println("Other:");
-                            printListWithCategoryTotal(othersList);
-                        }
-                        case 5 -> {
-                            // All
-                            System.out.println("All:");
-                            printAllPurchases(foodList, clothesList, entertainmentList, othersList);
-                        }
-                        case 6 -> {}
-                        default -> System.out.println("Invalid choice.");
-                    }
-
+                            System.out.println();
+                            switch (listChoice) {
+                                case 1 -> {
+                                    System.out.println("Food:");
+                                    printListWithCategoryTotal(foodList);
+                                }
+                                case 2 -> {
+                                    System.out.println("Clothes:");
+                                    printListWithCategoryTotal(clothesList);
+                                }
+                                case 3 -> {
+                                    System.out.println("Entertainment:");
+                                    printListWithCategoryTotal(entertainmentList);
+                                }
+                                case 4 -> {
+                                    System.out.println("Other:");
+                                    printListWithCategoryTotal(othersList);
+                                }
+                                case 5 -> {
+                                    // All
+                                    System.out.println("All:");
+                                    printAllPurchases(foodList, clothesList, entertainmentList, othersList);
+                                }
+                                case 6 -> {}
+                                default -> System.out.println("Invalid choice.");
+                            }
+                    System.out.println();
                 }
                 case 4 -> {
                     System.out.println();
                     System.out.printf(Locale.US,"Balance: $%.2f%n", balance);
                     System.out.println();
                 }
+                case 5 -> { // Save to file
+                    FileWriter writer = new FileWriter("/Users/dannytran/Documents/IntelliJ/BudgetManager/purchases.txt");
+                    writer.write("Apples\n");
+                    writer.write("Hoodie");
+                    writer.close();
+                    System.out.println("Purchases were saved!");
+                }
+                case 6 -> {
+                    // Load the file
+                    File file = new File("/Users/dannytran/Documents/IntelliJ/BudgetManager/purchases.txt");
+                    try (Scanner scanner = new Scanner(file)){
+                        while (scanner.hasNext()) {
+                            System.out.print(scanner.nextLine() + "\n");
+                        }
+                    }catch (FileNotFoundException e) {
+                        System.out.println("No such file exists!");
+                    }
+                }
                 case 0 -> {
                     System.out.println();
-                    exit = true;
                     System.out.println("Bye!");
-                    System.out.println();
+                    exit = true;
                 }
             }
         }
@@ -115,7 +127,16 @@ public class Main {
 
     //  --------- Input helpers (keep it simple for now) ---------
     private static int readIntInRange(Scanner in) {
-        return in.nextInt();
+        while(true){
+            if (in.hasNextInt()) {
+                int value = in.nextInt();
+                in.nextLine(); // consume trailing newline
+                return value;
+            }
+            else {
+                in.nextLine();
+            }
+        }
     }
 
     private static double readMoney(Scanner in, String prompt){
@@ -130,6 +151,8 @@ public class Main {
         System.out.println("2) Add purchase");
         System.out.println("3) Show list of purchases");
         System.out.println("4) Balance");
+        System.out.println("5) Save");
+        System.out.println("6) Load");
         System.out.println("0) Exit");
     }
 
@@ -155,14 +178,20 @@ public class Main {
     }
     // --------- Actions ---------
     private static double addIncome(Scanner in){
-        System.out.println("Enter income:");
-        return in.nextDouble();
+        while(true){
+            System.out.println("Enter income:");
+            if (in.hasNextDouble()){
+                double value = in.nextDouble();
+                in.nextLine();
+                return value;
+            }else {
+                System.out.println("Please enter a valid number.");
+                in.nextLine();
+            }
+        }
     }
 
     private static double addPurchase(Scanner in, List<String> purchases){
-        if(in.hasNextLine()){
-            in.nextLine();
-        }
         System.out.println("Enter purchase name:");
         String purchaseName = in.nextLine().trim();
         double price = readMoney(in, "Enter price: ");
@@ -210,4 +239,18 @@ public class Main {
         String last = parts[parts.length - 1].replace("$","");
         return Double.parseDouble(last);
     }
+
+    private static void createFile(String pathName){
+        File file = new File(pathName);
+        try {
+            if(file.createNewFile()){
+                System.out.println("File created: " + file.getName() + "\n");
+            }else {
+                System.out.println("File already exists.\n");
+            }
+        }catch (IOException e) {
+            System.out.println("Cannot create the file: " + file.getPath());
+        }
+    }
+
 }
