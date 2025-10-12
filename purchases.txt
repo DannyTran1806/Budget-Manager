@@ -1,2 +1,6 @@
-Apples
-Hoodie
+Food:
+Apples $2.99
+Clothes:
+Entertainment:
+Other:
+Table $129.99

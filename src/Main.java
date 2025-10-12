@@ -98,9 +98,23 @@ public class Main {
                     System.out.println();
                 }
                 case 5 -> { // Save to file
-                    FileWriter writer = new FileWriter("/Users/dannytran/Documents/IntelliJ/BudgetManager/purchases.txt");
-                    writer.write("Apples\n");
-                    writer.write("Hoodie");
+                    FileWriter writer = new FileWriter("/Users/dannytran/Documents/IntelliJ/BudgetManager/purchases.txt",false);
+                    writer.write("Food:\n");
+                    for(String foodItem : foodList){
+                        writer.write(foodItem+"\n");
+                    }
+                    writer.write("Clothes:\n");
+                    for(String clothesItem : clothesList){
+                        writer.write(clothesItem+"\n");
+                    }
+                    writer.write("Entertainment:\n");
+                    for(String entertainmentItem : entertainmentList){
+                        writer.write(entertainmentItem+"\n");
+                    }
+                    writer.write("Other:\n");
+                    for(String othersItem : othersList){
+                        writer.write(othersItem+"\n");
+                    }
                     writer.close();
                     System.out.println("Purchases were saved!");
                 }
@@ -108,8 +122,8 @@ public class Main {
                     // Load the file
                     File file = new File("/Users/dannytran/Documents/IntelliJ/BudgetManager/purchases.txt");
                     try (Scanner scanner = new Scanner(file)){
-                        while (scanner.hasNext()) {
-                            System.out.print(scanner.nextLine() + "\n");
+                        while (scanner.hasNextLine()) {
+                            foodList.add(scanner.nextLine().trim());
                         }
                     }catch (FileNotFoundException e) {
                         System.out.println("No such file exists!");
