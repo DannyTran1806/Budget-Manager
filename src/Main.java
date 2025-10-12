@@ -99,20 +99,22 @@ public class Main {
                 }
                 case 5 -> { // Save to file
                     FileWriter writer = new FileWriter("/Users/dannytran/Documents/IntelliJ/BudgetManager/purchases.txt",false);
-                    writer.write("Food:\n");
+                    writer.write("Balance:\n");
+                    writer.write(String.valueOf(balance)+ "\n");
                     for(String foodItem : foodList){
+                        writer.write("Food:\n");
                         writer.write(foodItem+"\n");
                     }
-                    writer.write("Clothes:\n");
                     for(String clothesItem : clothesList){
+                        writer.write("Clothes:\n");
                         writer.write(clothesItem+"\n");
                     }
-                    writer.write("Entertainment:\n");
                     for(String entertainmentItem : entertainmentList){
+                        writer.write("Entertainment:\n");
                         writer.write(entertainmentItem+"\n");
                     }
-                    writer.write("Other:\n");
                     for(String othersItem : othersList){
+                        writer.write("Other:\n");
                         writer.write(othersItem+"\n");
                     }
                     writer.close();
@@ -123,7 +125,15 @@ public class Main {
                     File file = new File("/Users/dannytran/Documents/IntelliJ/BudgetManager/purchases.txt");
                     try (Scanner scanner = new Scanner(file)){
                         while (scanner.hasNextLine()) {
-                            foodList.add(scanner.nextLine().trim());
+                            String category = scanner.nextLine().trim();
+                            switch (category) {
+                                case "Balance:" -> balance = Double.parseDouble(scanner.nextLine());
+                                case "Food:" -> foodList.add(scanner.nextLine());
+                                case "Clothes:" -> clothesList.add(scanner.nextLine());
+                                case "Entertainment:" -> entertainmentList.add(scanner.nextLine());
+                                case "Other:" -> othersList.add(scanner.nextLine());
+                                default ->  System.out.println("Invalid choice.");
+                            }
                         }
                     }catch (FileNotFoundException e) {
                         System.out.println("No such file exists!");

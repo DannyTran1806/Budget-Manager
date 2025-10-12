@@ -1,6 +1,10 @@
+Balance:
+979.0
 Food:
-Apples $2.99
+Apples $5.00
+Food:
+Strawberries $5.00
+Food:
+Chocolate $1.00
 Clothes:
-Entertainment:
-Other:
-Table $129.99
+Hoodie $10.00
