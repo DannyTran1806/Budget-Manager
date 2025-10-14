@@ -14,6 +14,7 @@ public class Main {
         List<String>  clothesList= new ArrayList<>();
         List<String>  entertainmentList= new ArrayList<>();
         List<String>  othersList= new ArrayList<>();
+        List<Item>  itemsToBeSorted = new ArrayList<>();
 
         boolean exit = false;
         createFile("purchases.txt");
@@ -139,6 +140,21 @@ public class Main {
                         System.out.println("No such file exists!");
                     }
                 }
+                case 7 -> {
+                    switch (sortingOptions(in)){
+                        case 1 -> {
+                            sortList(foodList);
+                            printListWithCategoryTotal(foodList);
+                        }
+                        case 2 -> {}
+                        case 3 -> {}
+                        case 4 -> {
+                            System.out.println();
+                            break;
+                        }
+                        default -> System.out.println("Invalid choice.");
+                    }
+                }
                 case 0 -> {
                     System.out.println();
                     System.out.println("Bye!");
@@ -147,8 +163,6 @@ public class Main {
             }
         }
     }
-
-
     //  --------- Input helpers (keep it simple for now) ---------
     private static int readIntInRange(Scanner in) {
         while(true){
@@ -177,6 +191,7 @@ public class Main {
         System.out.println("4) Balance");
         System.out.println("5) Save");
         System.out.println("6) Load");
+        System.out.println("7) Analyze (Sort)");
         System.out.println("0) Exit");
     }
 
@@ -198,6 +213,15 @@ public class Main {
         System.out.println("4) Other");
         System.out.println("5) All");
         System.out.println("6) Back");
+        return readIntInRange(in);
+    }
+
+    private static int sortingOptions(Scanner in){
+        System.out.println("How do you want to sort?");
+        System.out.println("1) Sort all purchases");
+        System.out.println("2) Sort by type");
+        System.out.println("3) Sort certain type");
+        System.out.println("4) Back");
         return readIntInRange(in);
     }
     // --------- Actions ---------
@@ -274,6 +298,50 @@ public class Main {
             }
         }catch (IOException e) {
             System.out.println("Cannot create the file: " + file.getPath());
+        }
+    }
+
+    private static List<Item> transferStringToItemList (List<String> purchaseList){
+        ArrayList<Item> itemList = new ArrayList<>();
+        for (String purchaseItem :  purchaseList){
+            String[] parts = purchaseItem.trim().split(" ");
+            String last = parts[parts.length - 1].replace("$","");
+            itemList.add(new Item(parts[0],Double.parseDouble(last)));
+        }
+        return itemList;
+    }
+
+    private static void sortByPricesDesc(List<Item> items){
+        int n = items.size();
+        int i, j;
+        boolean swapped;
+        for (i = 0; i < n - 1; i++) {
+            swapped = false;
+            for (j = 0; j < n - i - 1; j++) {
+                double pj = items.get(j).getItemPrice();
+                double pj1 = items.get(j + 1).getItemPrice();
+                if (pj < pj1) {
+                    // Swap arr[j] and arr[j+1]
+                    Item temp = items.get(j);
+                    items.set(j, items.get(j + 1));
+                    items.set(j + 1, temp);
+                    swapped = true;
+                }
+            }
+            // If no two elements were
+            // swapped by inner loop, then break
+            if (swapped == false)
+                break;
+        }
+    }
+    private static void sortList(List<String> purchaseList) {
+        List<Item> items = transferStringToItemList(purchaseList);
+        sortByPricesDesc(items);
+
+        purchaseList.clear();
+        for (Item it : items) {
+            // Einheitliches Format; Trennzeichen bewusst als Punkt:
+            purchaseList.add(it.getItemName() + " $" + String.format(Locale.US, "%.2f", it.getItemPrice()));
         }
     }
 

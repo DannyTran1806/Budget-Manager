@@ -1,10 +1,6 @@
 Balance:
-979.0
+100.0
 Food:
-Apples $5.00
+Apples $1.00
 Food:
-Strawberries $5.00
-Food:
-Chocolate $1.00
-Clothes:
-Hoodie $10.00
+Strawberries $2.00
