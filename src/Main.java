@@ -142,12 +142,37 @@ public class Main {
                 }
                 case 7 -> {
                     switch (sortingOptions(in)){
-                        case 1 -> {
-                            sortList(foodList);
-                            printListWithCategoryTotal(foodList);
+                        case 1 -> { //Sort ALL purchases
+                            printAllPurchasesSorted(foodList, clothesList, entertainmentList, othersList);
                         }
-                        case 2 -> {}
-                        case 3 -> {}
+                        case 2 -> { // Sort by Type (total sum)
+                            sortByCertainType(foodList, "Food");
+                            sortByCertainType(clothesList, "Clothes");
+                            sortByCertainType(entertainmentList, "Entertainment");
+                            sortByCertainType(othersList, "Other");
+                            System.out.println("Total sum: ");
+                        }
+                        case 3 -> { //Sort by certain type
+                            switch(displayCategoryMenu(in)){
+                                case 1 -> {
+                                    System.out.println("Food:");
+                                    sortAndPrint(foodList);
+                                }
+                                case 2 -> {
+                                    System.out.println("Clothes:");
+                                    sortAndPrint(clothesList);
+                                }
+                                case 3 -> {
+                                    System.out.println("Entertainment:");
+                                    sortAndPrint(entertainmentList);
+                                }
+                                case 4 -> {
+                                    System.out.println("Other:");
+                                    sortAndPrint(othersList);
+                                }
+                            }
+
+                        }
                         case 4 -> {
                             System.out.println();
                             break;
@@ -303,7 +328,7 @@ public class Main {
 
     private static List<Item> transferStringToItemList (List<String> purchaseList){
         ArrayList<Item> itemList = new ArrayList<>();
-        for (String purchaseItem :  purchaseList){
+        for (String purchaseItem : purchaseList){
             String[] parts = purchaseItem.trim().split(" ");
             String last = parts[parts.length - 1].replace("$","");
             itemList.add(new Item(parts[0],Double.parseDouble(last)));
@@ -337,7 +362,6 @@ public class Main {
     private static void sortList(List<String> purchaseList) {
         List<Item> items = transferStringToItemList(purchaseList);
         sortByPricesDesc(items);
-
         purchaseList.clear();
         for (Item it : items) {
             // Einheitliches Format; Trennzeichen bewusst als Punkt:
@@ -345,4 +369,53 @@ public class Main {
         }
     }
 
+    private static void sortAndPrint(List<String> purchaseList){
+        List<String> copyFoodList = new ArrayList<>(purchaseList);
+        sortList(copyFoodList);
+        printListWithCategoryTotal(copyFoodList);
+        System.out.println();
+    }
+
+    private static double sortByCertainType(List<String> purchases, String categoryName){
+        if(purchases.isEmpty()){
+            System.out.println(categoryName + " - $0");
+            return 0.00;
+        }
+        double sum = 0.0;
+        for(String purchase : purchases){
+            String[] parts = purchase.trim().split(" ");
+            String last = parts[parts.length - 1].replace("$","");
+            sum += Double.parseDouble(last);
+        }
+        System.out.printf(Locale.US, "%s - $%.2f%n", categoryName, sum);
+        return sum;
+    }
+
+    private static void printAllPurchasesSorted(List<String>...lists){
+        double grandTotal = 0.0;
+        int count = 0;
+        List<Item> items = new ArrayList<>();
+        List<String> listOfAll = new ArrayList<>();
+
+        for (List<String> list : lists){
+            items =  transferStringToItemList(list);
+            for(String purchase : list){
+                grandTotal += extractPrice(purchase);
+                count++;
+            }
+            for (Item it : items) {
+                listOfAll.add(it.getItemName() + " $" + String.format(Locale.US, "%.2f", it.getItemPrice()));
+            }
+        }
+        sortByPricesDesc(items);
+        for (String item : listOfAll) {
+            System.out.println(item);
+        }
+
+        if(count == 0){
+            System.out.println("The purchase list is empty!");
+        }else {
+            System.out.printf(Locale.US, "Total: $%.2f%n", grandTotal);
+        }
+    }
 }

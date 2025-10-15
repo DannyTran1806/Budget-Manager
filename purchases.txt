@@ -1,6 +1,18 @@
 Balance:
-100.0
+0.0
 Food:
 Apples $1.00
 Food:
 Strawberries $2.00
+Clothes:
+Hoodie $5.99
+Clothes:
+Tshirt $2.99
+Entertainment:
+Netflix $12.99
+Entertainment:
+Prime $4.99
+Other:
+Table $129.99
+Other:
+Couch $999.99
