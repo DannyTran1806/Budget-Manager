@@ -1,8 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -146,11 +143,13 @@ public class Main {
                             printAllPurchasesSorted(foodList, clothesList, entertainmentList, othersList);
                         }
                         case 2 -> { // Sort by Type (total sum)
-                            sortByCertainType(foodList, "Food");
-                            sortByCertainType(clothesList, "Clothes");
-                            sortByCertainType(entertainmentList, "Entertainment");
-                            sortByCertainType(othersList, "Other");
-                            System.out.println("Total sum: ");
+                            printByType2(Map.of(
+                                    "Food", foodList,
+                                    "Clothes", clothesList,
+                                    "Entertainment", entertainmentList,
+                                    "Other", othersList
+                            ));
+
                         }
                         case 3 -> { //Sort by certain type
                             switch(displayCategoryMenu(in)){
@@ -419,4 +418,55 @@ public class Main {
             System.out.printf(Locale.US, "Total: $%.2f%n", grandTotal);
         }
     }
+
+
+    private static void printByType1 (List<String>...lists){
+        double grandTotal = 0.0;
+        int count = 0;
+        double sumOfCategory = 0.0;
+        double temp = 0.0;
+        List<Item> items = new ArrayList<>();
+        for (List<String> list : lists){
+            for (String listItem : list){
+                String[] parts = listItem.trim().split(" ");
+                String last = parts[parts.length - 1].replace("$","");
+                temp += Double.parseDouble(last);
+                grandTotal += extractPrice(listItem);
+                count++;
+            }
+            items.add(new Item("Test", temp));
+            temp = 0.0;
+        }
+        sortByPricesDesc(items);
+        for (Item it : items){
+            System.out.println(it.getItemName() + " - $" +  String.format(Locale.US, "%.2f", it.getItemPrice()));
+        }
+        System.out.println("Total sum: $" + String.format("%.2f", grandTotal));
+    }
+    private static void printByType2(Map<String, List<String>> categories) {
+        double grandTotal = 0.0;
+        List<Item> items = new ArrayList<>();
+
+        for (Map.Entry<String, List<String>> e : categories.entrySet()) {
+            double sum = sumPrices(e.getValue());         // s. Hilfsfunktion unten
+            items.add(new Item(e.getKey(), sum));         // <-- richtiger Name!
+            grandTotal += sum;
+        }
+
+        sortByPricesDesc(items);
+
+        for (Item it : items) {
+            System.out.println(it.getItemName() + " - $" + String.format(Locale.US, "%.2f", it.getItemPrice()));
+        }
+        System.out.println("Total sum: $" + String.format(Locale.US, "%.2f", grandTotal));
+    }
+
+    private static double sumPrices(List<String> list) {
+        double sum = 0.0;
+        for (String s : list) {
+            sum += extractPrice(s); // oder parseLastTokenPrice(s)
+        }
+        return sum;
+    }
+
 }

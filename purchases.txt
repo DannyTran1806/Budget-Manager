@@ -1,5 +1,5 @@
 Balance:
-0.0
+100000
 Food:
 Apples $1.00
 Food:
