@@ -398,20 +398,21 @@ public class Main {
         List<String> listOfAll = new ArrayList<>();
 
         for (List<String> list : lists){
-            items =  transferStringToItemList(list);
-            for(String purchase : list){
-                grandTotal += extractPrice(purchase);
+            for (String listItem : list){
+                String[] parts = listItem.trim().split(" ");
+                String last = parts[parts.length - 1].replace("$","");
+                items.add(new Item(parts[0],Double.parseDouble(last)));
+                grandTotal += extractPrice(listItem);
                 count++;
-            }
-            for (Item it : items) {
-                listOfAll.add(it.getItemName() + " $" + String.format(Locale.US, "%.2f", it.getItemPrice()));
             }
         }
         sortByPricesDesc(items);
+        for (Item it : items) {
+            listOfAll.add(it.getItemName() + " $" + String.format(Locale.US, "%.2f", it.getItemPrice()));
+        }
         for (String item : listOfAll) {
             System.out.println(item);
         }
-
         if(count == 0){
             System.out.println("The purchase list is empty!");
         }else {
